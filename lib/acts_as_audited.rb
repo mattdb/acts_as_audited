@@ -115,10 +115,10 @@ module CollectiveIdea #:nodoc:
 
           write_inheritable_attribute :auditing_enabled, true
         end
-      end
 
-      def has_associated_audits
-        has_many :associated_audits, :as => :association, :class_name => "Audit"
+        def has_associated_audits
+          has_many :associated_audits, :as => :association, :class_name => "Audit"
+        end
       end
 
       module InstanceMethods
