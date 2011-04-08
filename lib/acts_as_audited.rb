@@ -188,15 +188,6 @@ module CollectiveIdea #:nodoc:
         end
 
       private
-        
-        def auditable_parent
-          case ( possible_parent = self.class.read_inheritable_attribute(:auditable_parent) )
-          when Symbol
-            send( possible_parent )
-          else
-            nil
-          end
-        end
 
         def audited_changes
           changed_attributes.except(*non_audited_columns).inject({}) do |changes,(attr, old_value)|
@@ -219,20 +210,17 @@ module CollectiveIdea #:nodoc:
         end
 
         def audit_create
-          write_audit(:action => 'create', :changes => audited_attributes, 
-            :comment => audit_comment, :auditable_parent => auditable_parent)
+          write_audit(:action => 'create', :changes => audited_attributes, :comment => audit_comment)
         end
 
         def audit_update
           unless (changes = audited_changes).empty?
-            write_audit(:action => 'update', :changes => changes, 
-              :comment => audit_comment, :auditable_parent => auditable_parent)
+            write_audit(:action => 'update', :changes => changes, :comment => audit_comment)
           end
         end
 
         def audit_destroy
-          write_audit(:action => 'destroy', :changes => audited_attributes,
-            :comment => audit_comment, :auditable_parent => auditable_parent)
+          write_audit(:action => 'destroy', :changes => audited_attributes, :comment => audit_comment)
         end
 
         def write_audit(attrs)
