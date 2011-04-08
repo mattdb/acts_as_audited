@@ -12,7 +12,16 @@ class Audit < ActiveRecord::Base
   belongs_to :auditable, :polymorphic => true
   belongs_to :user, :polymorphic => true
   belongs_to :association, :polymorphic => true
-  
+
+  named_scope :for_auditable_or_association, lambda { |model|
+    {
+          :conditions => [
+                '(auditable_type = ? AND auditable_id = ?) OR (association_type = ? AND association_id = ?)',
+                model.class.base_class.name, model.id, model.class.base_class.name, model.id],
+          :order => 'created_at'
+    }
+  }
+
   before_create :set_version_number, :set_audit_user
   
   serialize :changes

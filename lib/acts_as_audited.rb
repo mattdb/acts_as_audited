@@ -166,6 +166,10 @@ module CollectiveIdea #:nodoc:
           attributes.except(*non_audited_columns)
         end
 
+        def all_audits
+          Audit.for_auditable_or_association(self)
+        end
+
         protected
 
         def revision_with(attributes)
